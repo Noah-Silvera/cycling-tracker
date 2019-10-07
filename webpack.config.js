@@ -6,6 +6,14 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    port: 9000
+  },
+  resolve: {
+    modules: ['./', 'node_modules', 'src']
+  },
   module: {
     rules: [
       {
@@ -20,6 +28,10 @@ module.exports = {
         use: [
           'file-loader'
         ]
+      },
+      {
+        test: /\.geojson$/,
+        use: 'json-loader'
       }
     ]
   }
