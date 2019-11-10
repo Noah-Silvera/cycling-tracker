@@ -12,7 +12,7 @@ module.exports = {
     port: 9000
   },
   resolve: {
-    modules: ['./', 'node_modules', 'src']
+    modules: ['./', 'node_modules', 'src', 'libraries','photos']
   },
   module: {
     rules: [
@@ -24,10 +24,14 @@ module.exports = {
         ]
       },
       {
-        test: /\.png$/,
+        test: /\.(gif|png|svg)$/i,
         use: [
           'file-loader'
-        ]
+        ],
+      },
+      {
+        test: /\.jpg$/,
+        use: ['exif-size-loader', 'file-loader']
       },
       {
         test: /\.geojson$/,
