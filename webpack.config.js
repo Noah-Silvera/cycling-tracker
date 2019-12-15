@@ -1,4 +1,5 @@
 const path = require('path');
+const express = require('express')
 
 module.exports = {
   entry: './src/index.js',
@@ -9,10 +10,15 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
-    port: 9000
+    port: 9000,
+    setup (app) {
+      app.use('/static/',
+        express.static(path.join(__dirname, 'src', 'static')));
+
+    }
   },
   resolve: {
-    modules: ['./', 'node_modules', 'src', 'libraries','photos']
+    modules: ['./', 'node_modules', 'src', 'libraries','photos', 'static']
   },
   module: {
     rules: [

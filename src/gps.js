@@ -1,33 +1,39 @@
 
-const filterGeojsonFeatures = function(geoJSON){
-    geoJSON.features = geoJSON.features.filter((feature) => feature.geometry.type !== "Point")
-    return geoJSON
+const filterOutPointFeatures = function(features){
+    const filteredFeatures = features.filter((feature) => feature.geometry.type !== "Point")
+    return filteredFeatures
 }
 
+const filterOnlyPointFeatures = function(features){
+    const filteredFeatures = features.filter((feature) => feature.geometry.type === "Point")
+    return filteredFeatures
+}
+
+const dotColour = "#628395"
+const lineColours = [ "#DBAD6A", "#96897B", "#628395"]
+
 const addGpsTrack = (() => {
-        const colours = [
-            "#3F33FF",
-            "#FF3333",
-            "#33FF55",
-            "#D433FF",
-            "#FFAB22"
-        ]
-        var i = 0;
+    var lineIdx = 0;
+    return function(map, gpsTrack) {
+        L.geoJSON({ ...gpsTrack.track, features: filterOutPointFeatures(gpsTrack.track.features) }, {
+            style: ((feature) => ({
+            "color": (lineColours[lineIdx++ % lineColours.length]),
+            "weight": 3,
+            }))
+        }).addTo(map);
 
-        return function(map, track) {
-            L.geoJSON(filterGeojsonFeatures(track), {
-                style: ((feature) => ({
-                "color": (colours[i % colours.length]),
-                "weight": 3,
-                }))
-            }).addTo(map);
+        const points = filterOnlyPointFeatures(gpsTrack.track.features);
+        const lastPoint = points[points.length -1]
 
-            i = (++i % colours.length)
-        }
+        L.marker(L.latLng(lastPoint.properties.latitude, lastPoint.properties.longitude), { color: dotColour})
+            .bindPopup(gpsTrack.desc)
+            .addTo(map);
+    }
 })();
 
 
 export default {
-    filterGeojsonFeatures,
+    filterOutPointFeatures,
+    filterOnlyPointFeatures,
     addGpsTrack 
 }
