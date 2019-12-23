@@ -10,23 +10,27 @@ const filterOnlyPointFeatures = function(features){
 }
 
 const lineWeight = 3;
-const lineOpacity = 0.3;
+const lineOpacity = 0.7;
+
+const onMouseover = (embeddedLayer) => {
+    embeddedLayer.bringToFront()
+    embeddedLayer.setStyle({
+        weight: lineWeight * 2,
+        opacity: 1.0
+    });
+}
+
+const onMouseout = (embeddedLayer) => {
+    embeddedLayer.setStyle({
+        weight: lineWeight,
+        opacity: lineOpacity
+    });
+}
 
 function onEachFeature(feature, outlineLayer, embeddedLayer) {
     outlineLayer.on({
-        mouseover: () => {
-            embeddedLayer.setStyle({
-                weight: lineWeight * 2,
-                opacity: 1.0
-            });
-        },
-        mouseout: () => {
-            embeddedLayer.setStyle({
-                weight: lineWeight,
-                opacity: lineOpacity
-            });
-        },
-        // click: zoomToFeature
+        mouseover: () => onMouseover(embeddedLayer),
+        mouseout: () => onMouseout(embeddedLayer)
     });
 }
 
@@ -58,7 +62,8 @@ const addGpsTrack = (() => {
 
         outlineLayer.addTo(map);
 
-        outlineLayer.bindPopup("Popup content");
+        
+        outlineLayer.bindPopup(gpsTrack.desc, { autoPan: false });
         outlineLayer.on('mouseover', function (e) {
             this.openPopup();
         });
@@ -70,7 +75,9 @@ const addGpsTrack = (() => {
         const lastPoint = points[points.length -1]
 
         L.marker(L.latLng(lastPoint.properties.latitude, lastPoint.properties.longitude), { color: dotColour})
-            .bindPopup(gpsTrack.desc)
+            .on('popupopen', () => onMouseover(embeddedLayer))
+            .on('popupclose', () => onMouseout(embeddedLayer))
+            .bindPopup(gpsTrack.desc, { autoPan: false })
             .addTo(map);
     }
 })();
