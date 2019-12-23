@@ -53,6 +53,7 @@ function loadGpsTracks(map){
 }
 
 function loadPhotos(map){
+  
   var req = require.context("../photos/", true, /\.(jpg)$/);
 
   var fileReader = new FileReader();
@@ -63,6 +64,8 @@ function loadPhotos(map){
     }
   });
 }
+
+// TODO - distances on the tracks
 
 /* This code is needed to properly load the images in the Leaflet CSS */
 delete L.Icon.Default.prototype._getIconUrl;

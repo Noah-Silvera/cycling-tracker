@@ -14,7 +14,9 @@ module.exports = {
     setup (app) {
       app.use('/static/',
         express.static(path.join(__dirname, 'src', 'static')));
-
+      app.get('/', function(req, res) {
+          res.sendFile(path.join(__dirname + '/index.html'));
+      });
     }
   },
   resolve: {
