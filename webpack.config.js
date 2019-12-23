@@ -20,7 +20,7 @@ module.exports = {
     }
   },
   resolve: {
-    modules: ['./', 'node_modules', 'src', 'libraries','photos', 'static']
+    modules: ['./', 'node_modules', 'src', 'static']
   },
   module: {
     rules: [

@@ -22,18 +22,18 @@ function loadGpsTracks(map){
     "Day 11 - Slacks Cove",   
   ]
 
-  const day2 = require('../gps/day-2-peggys-cove.geojson');
-  const day3 = require('../gps/day-3-englishtown.geojson');
-  const day4 = require('../gps/day-4-englishtown-to-cheticamp.geojson');
-  const day5 = require('../gps/day-5-cape-breton-park.geojson');
-  const day6 = require('../gps/day-6-onto-pei.geojson');
-  const day7 = require('../gps/day-7-summerside.geojson');
-  const day8 = require('../gps/day-8-kayaking.geojson');
-  const day9 = require('../gps/day-9-charlottetown.geojson');
-  const day10 = require('../gps/day-10-pei-to-st-john.geojson')
-  const day11 = require('../gps/day-11-st-john-to-moncton.geojson');
-  const day12 = require('../gps/day-12-hopewell-rocks.geojson');
-  const day13 = require('../gps/day-13-slacks-cove.geojson');
+  const day2 = require('./gps/day-2-peggys-cove.geojson');
+  const day3 = require('./gps/day-3-englishtown.geojson');
+  const day4 = require('./gps/day-4-englishtown-to-cheticamp.geojson');
+  const day5 = require('./gps/day-5-cape-breton-park.geojson');
+  const day6 = require('./gps/day-6-onto-pei.geojson');
+  const day7 = require('./gps/day-7-summerside.geojson');
+  const day8 = require('./gps/day-8-kayaking.geojson');
+  const day9 = require('./gps/day-9-charlottetown.geojson');
+  const day10 = require('./gps/day-10-pei-to-st-john.geojson')
+  const day11 = require('./gps/day-11-st-john-to-moncton.geojson');
+  const day12 = require('./gps/day-12-hopewell-rocks.geojson');
+  const day13 = require('./gps/day-13-slacks-cove.geojson');
   const gpsTracks = [
     {track: day2, desc: dayDescriptions[0]},
     {track: day3, desc: dayDescriptions[1]},
@@ -54,7 +54,7 @@ function loadGpsTracks(map){
 
 function loadPhotos(map){
   
-  var req = require.context("../photos/", true, /\.(jpg)$/);
+  var req = require.context("./photos/", true, /\.(jpg)$/);
 
   var fileReader = new FileReader();
   req.keys().forEach(function(key){

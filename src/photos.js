@@ -1,6 +1,6 @@
 import 'leaflet.markercluster'
-import 'libraries/Leaflet.Photo/Leaflet.Photo.js'
-import 'libraries/Leaflet.Photo/Leaflet.Photo.css'
+import './libraries/Leaflet.Photo/Leaflet.Photo.js'
+import './libraries/Leaflet.Photo/Leaflet.Photo.css'
 
 var photoLayer = null; 
 
