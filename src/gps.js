@@ -1,17 +1,8 @@
-
-const filterOutPointFeatures = function(features){
-    const filteredFeatures = features.filter((feature) => feature.geometry.type !== "Point")
-    return filteredFeatures
+const isPointFeature = function(feature){
+    return feature.geometry.type == "Point"
 }
 
-const filterOnlyPointFeatures = function(features){
-    const filteredFeatures = features.filter((feature) => feature.geometry.type === "Point")
-    return filteredFeatures;
-}
-
-const lineWeight = 3;
-const lineOpacity = 0.7;
-
+// show the highlight line
 const onMouseover = (embeddedLayer) => {
     embeddedLayer.bringToFront()
     embeddedLayer.setStyle({
@@ -20,6 +11,7 @@ const onMouseover = (embeddedLayer) => {
     });
 }
 
+// hide the highlight line s
 const onMouseout = (embeddedLayer) => {
     embeddedLayer.setStyle({
         weight: lineWeight,
@@ -34,57 +26,63 @@ function onEachFeature(feature, outlineLayer, embeddedLayer) {
     });
 }
 
-
+const lineWeight = 3;
+const lineOpacity = 0.7;
 const dotColour = "#628395"
-const lineColours = [ "#B49A67", "#8F91A9", "#96897B","#DBAD6A", "#E56B70", "#628395"]
 
-const addGpsTrack = (() => {
+const getNextLineColour = (() => {
+    const lineColours = [ "#B49A67", "#8F91A9", "#96897B","#DBAD6A", "#E56B70", "#628395"]
     var lineIdx = 0;
-    return function(map, gpsTrack) {
-        var embeddedLayer = L.geoJSON({ ...gpsTrack.track, features: filterOutPointFeatures(gpsTrack.track.features) }, {
-            style: ((feature) => ({
-                "color": (lineColours[lineIdx++ % lineColours.length]),
-                "weight": lineWeight,
-                opacity: 1.0
-            }))
-        })
-
-        embeddedLayer.addTo(map);
-
-        var outlineLayer = L.geoJSON({ ...gpsTrack.track, features: filterOutPointFeatures(gpsTrack.track.features) }, {
-            onEachFeature: (feature, outlineLayer) => onEachFeature(feature, outlineLayer, embeddedLayer),
-            style: ((feature) => ({
-                "color": "purple",
-                "weight": lineWeight+45,
-                opacity: 0
-            }))
-        })
-
-        outlineLayer.addTo(map);
-
-        
-        outlineLayer.bindPopup(gpsTrack.desc, { autoPan: false });
-        outlineLayer.on('mouseover', function (e) {
-            this.openPopup();
-        });
-        outlineLayer.on('mouseout', function (e) {
-            this.closePopup();
-        });
-
-        const points = filterOnlyPointFeatures(gpsTrack.track.features);
-        const lastPoint = points[points.length -1]
-
-        L.marker(L.latLng(lastPoint.properties.latitude, lastPoint.properties.longitude), { color: dotColour})
-            .on('popupopen', () => onMouseover(embeddedLayer))
-            .on('popupclose', () => onMouseout(embeddedLayer))
-            .bindPopup(gpsTrack.desc, { autoPan: false })
-            .addTo(map);
-    }
+    return () => lineColours[lineIdx++ % lineColours.length]
 })();
+
+const addGpsTrack = function(map, gpsTrack) {
+    // Visible line representing the GPS track
+    var mainTrack = L.geoJSON({ ...gpsTrack.track, features: gpsTrack.track.features.filter((feature) => !isPointFeature(feature)) }, {
+        style: ((feature) => ({
+            "color": getNextLineColour(),
+            "weight": lineWeight,
+            opacity: 1.0
+        }))
+    })
+
+    mainTrack.addTo(map);
+
+    // Highlight line that appears on mouseover
+    var trackHighlight = L.geoJSON({ ...gpsTrack.track, features: gpsTrack.track.features.filter((feature) => !isPointFeature(feature)) }, {
+        onEachFeature: (feature, trackHighlight) => onEachFeature(feature, trackHighlight, mainTrack),
+        style: ((feature) => ({
+            "color": "purple",
+            "weight": lineWeight + 45,
+            opacity: 0
+        }))
+    })
+
+    trackHighlight.addTo(map);
+
+    // Popup the description on mouseover
+    trackHighlight.bindPopup(gpsTrack.desc, { autoPan: false });
+
+    trackHighlight.on('mouseover', function (e) {
+        this.openPopup();
+    });
+    
+    trackHighlight.on('mouseout', function (e) {
+        this.closePopup();
+    });
+
+    const points = gpsTrack.track.features.filter(isPointFeature);
+    const lastPoint = points[points.length -1]
+
+    // Add the marker at the endpoint point of the GPS track, and show the track highlight on mouseover
+    L.marker(L.latLng(lastPoint.properties.latitude, lastPoint.properties.longitude), { color: dotColour})
+        .on('popupopen', () => onMouseover(mainTrack))
+        .on('popupclose', () => onMouseout(mainTrack))
+        .bindPopup(gpsTrack.desc, { autoPan: false })
+        .addTo(map);
+}
 
 
 export default {
-    filterOutPointFeatures,
-    filterOnlyPointFeatures,
     addGpsTrack 
 }

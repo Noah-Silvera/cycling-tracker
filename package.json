@@ -13,11 +13,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "leaflet": "^1.4.0",
-    "leaflet.markercluster": "^1.4.1"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",
-    "exif-size-loader": "^0.3.0",
     "file-loader": "^4.2.0",
     "json-loader": "^0.5.7",
     "style-loader": "^1.0.0",

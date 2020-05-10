@@ -1,14 +1,16 @@
-# leaflet-webpack
-This repository contains code illustrating how to use [Leaflet](http://leafletjs.com/) with [webpack](https://webpack.js.org/).
+## East Coast Trip 2019
 
-## Instructions
-To see the code in action, clone or download the repository. Navigate to the directory in your terminal of choice and run `npm install`.
+A website I built to visualize my 2019 East Coast Vacation with my Mom.
 
-After npm installs all of the dependencies, type `npm run build` to bundle all of the assets with webpack.
+Check it out at https://eastcoast2019.herokuapp.com/
 
-You can then open `dist/index.html` in your browser. This should show a basic Leaflet map with a point on the Lincoln Memorial in Washington, D.C. Viewing the page source confirms that all assets are coming from one `bundle.js` file.
+## Development
 
-## Usage
-This webpack configuration is as bare-bones as possible to work with Leaflet. If you are going to use it for development, I recommend [a basic understanding of webpack](https://webpack.js.org/guides/getting-started/).
+`npm run dev` will start a webpack development server
 
-You will probably want to update the webpack config to include a transpiler, `dist` folder clean-up, `webpack-dev-server`, etc.
+## Deployment
+
+`npm run build` will produce the optimized production assets
+
+`npm run start` will run a node server that hosts the static content
+
